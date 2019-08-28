@@ -162,16 +162,72 @@ We can confirm with certainty that one cannot convert the graph into an exlusive
 
 Let's look at the second example:`leiden`. Once again, we need to install the appropriate packages. 
 
-```{r include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph)
-setwd(getwd())
+```{r message=FALSE}
+if (!requireNamespace("devtools"))
+    install.packages("devtools")
+
+devtools::install_github("TomKellyGenetics/leiden")
+```
+
+We use pacman to load the following libraries:
+```{r}
+pacman::p_load(leiden, tidygraph, tidyverse, igraph, ggraph, randomNames, RColorBrewer, reticulate, leidenalg)
+```
+
+Let's read in the `enron` dataset again and build our graph. Note that, once again, the class of `enron` is an igraph.
+```{r message=FALSE, warning=FALSE}
+enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
+  rename("from" = X1,
+         "to" = X2) %>% 
+  graph_from_data_frame()
+```
+
+It is not essential to understand the algorithm in full detail. Rather, spend time understanding the steps to convert the tbl_graph into igraph and vise-versa.
+
+Here we convert the graph into a `tbl_graph` as follows:
+```{r}
+enron_tidy <- as_tbl_graph(enron)
 ```
 
 
-## Using Triad Census
+Next, we convert `enron_tidy` to an adjacency matrix, since the leiden algorithm requires an adjacency matrix as a paramater. From there we create a graph project that can be plotted.
+```{r}
+A <- as_adjacency_matrix(enron_tidy,type="both",names=TRUE,sparse=FALSE)
 
-This function counts for each triple of vertices, the number of times each of the 16 possible states occur. 
+graph_object <- graph_from_adjacency_matrix(A, mode = "directed")
+
+plot(graph_object, vertex.color = "grey75")
+```
+
+
+This can be a shared nearest neighbours matrix derived from a graph object. Once again, we namespace the `as_adjacency_matrix` with both the igraph and tidygraph package. We encounter the same error as in the previous example. `as_adjacency_matrix` is not supported by the tidygraph package and outputs the following error: 'as_adjacency_matrix' is not an exported object from 'namespace:tidygraph'. Uncomment and run the second line to see the error.
+```{r}
+adjacency_matrix <- igraph::as_adjacency_matrix(graph_object)
+#adjacency_matrix <- tidygraph::as_adjacency_matrix(graph_object)
+```
+
+Once we have successfully been able to convert the tbl_graph into an igraph and then finally into an agency matrix, we can run the following `leiden` function:
+```{r}
+#partition <- leiden(adjacency_matrix)
+#table(partition)
+```
+
+For interest sake: This shows partitions in the plotted results. The nodes that are more interconnected have been partitioned into separate clusters.
+```{r}
+node.cols <- brewer.pal(max(c(3, partition)),"Pastel1")[partition]
+plot(graph_object, vertex.color = node.cols)
+```
+
+### <b>3. Triad Census</b>
+
+We provide a third example of the missing functions in the tidygraph, where we are forced to convert the tbl_graph into an igraph. Once again, we need to import the correct packages.
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph)
+```
+
+As previously mentioned, `triad_census` counts for each triple of vertices, the number of times each of the 16 possible states occur. The states are represented by codes. Some examples can be found below: 
 
 * 003  -  A,B,C, the empty graph.
 
@@ -179,41 +235,18 @@ This function counts for each triple of vertices, the number of times each of th
 
 * 102  -  A<->B, C, the graph with a mutual connection between two vertices.
 
-* 021D  -  A<-B->C, the out-star.
-
-* 021U  -  A->B<-C, the in-star.
-
-* 021C  -  A->B->C, directed line.
-
-* 111D  -  A<->B<-C.
-
-* 111U  -  A<->B->C.
-
-* 030T  -  A->B<-C, A->C.
-
-* 030C  -  A<-B<-C, A->C.
-
-* 201  -  A<->B<->C.
-
-* 120D  -  A<-B->C, A<->C.
-
-* 120U  -  A->B<-C, A<->C.
-
-* 120C  -  A->B->C, A<->C.
-
-* 210  -  A->B<->C, A<->C.
-
-* 300  -  A<->B<->C, A<->C, the complete graph.
-
-Here is an array of the names of the types 
+Here is an array of the names of the states:
 ```{r}
 triad_names<- c("003 ","012 ","102 ","021D","021U","021C","111D","111U","030T","030C","201 ","120D","120U","120C","210 ","300 ")
 ```
 
+Remember that you can call `help(triad_census)` if you want to see a full description of the codes for the states. Before we dive right in, lets take a look at a few smaller graphs.
 
-### Smaller graphs
-In order to explain the types, here is a selection of smaller graphs and the results of running `triad_census` on them.
+> <b>Smaller graphs</b>
+In order to explain the states, here is a selection of smaller graphs and the results of running `triad_census` on them. We first substantiate a graph and then run `triad_census` on it. 
+
 ```{r}
+# Define a graph
 one <- graph_from_literal(A-+B, C--B)
 
 data.frame(tri = triad_census(one), name = triad_names)
@@ -270,6 +303,7 @@ data.frame(values = triads, names = triad_names) %>%
   xlab("Triad type") +
   ylab("Count")
 ```
+
 
 ```{r eval=FALSE, include=FALSE}
 rm(list=ls())
