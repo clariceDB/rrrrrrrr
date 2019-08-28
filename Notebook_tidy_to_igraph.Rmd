@@ -6,22 +6,77 @@ output: html_notebook
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
-```{r}
+```{r Load}
 pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph)
+setwd(getwd())
 ```
 
-```{r}
-enron <- read_delim("data/email-enron-only.mtx",delim = " ",col_names = F) %>% 
+```{r Read in}
+enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
   rename("from" = X1,
          "to" = X2) %>% 
+  mutate(triads_g = "test") %>% 
+  mutate(name = "names") %>%
   graph_from_data_frame()
 
 V(enron)$name <- randomNames(144, which.names="first")
 ```
+```{r}
+typeof(enron)
+E(enron)
+  NULL
+```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+```{r}
+enron_tidy <- as_tbl_graph(enron)
+```
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r}
+enron_tidy %>% 
+  ggraph()+
+  geom_node_point() + 
+  geom_node_text(aes(label = V(enron_tidy)$name), repel = F) +
+  geom_edge_diagonal()+
+  theme_graph()
+```
+
+
+Triad Cenus is not a measurement available in Tidygraph. Beware the return! (16 vectors)
+```{r Triad}
+tri_result <- igraph::triad_census(enron_tidy)
+tri_result
+```
+
+```{r}
+enron %>% 
+  as_tbl_graph() %>% 
+  triad_census()
+```
+
+```{r}
+triad_names<- c("003 ","012 ","102 ","021D","021U","021C","111D","111U","030T","030C","201 ","120D","120U","120C","210 ","300 ")
+
+new_df <- enron %>%
+  as_tbl_graph() %>%
+  mutate(triads_g = list(triad_census(.G()))) 
+
+new_df %>% select(triads_g)
+
+one <- V(new_df)$triads_g
+V(new_df)$name
+
+summary(new_df ~ triad_census())
+```
+
+```{r}
+new_df %>% 
+as_data_frame() %>% 
+  select(name,triads_g) %>% 
+  unnest() %>% 
+  mutate(triad = rep(triad_names, 39)) %>% 
+  distinct(triads_g,triad)
+
+```
+
 
