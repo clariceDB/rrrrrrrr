@@ -34,14 +34,15 @@ enron_tidy <- as_tbl_graph(enron)
 enron_tidy %>% 
   ggraph()+
   geom_node_point() + 
-  geom_node_text(aes(label = V(enron_tidy)$name), repel = TRUE) +
+  geom_node_text(aes(label = V(enron_tidy)$name), repel = F) +
+  geom_edge_diagonal()+
   theme_graph()
-  NULL
 ```
 
 
 Triad Cenus is not a measurement available in Tidygraph. Beware the return! (16 vectors)
 ```{r Triad}
-triad_census(enron_tidy)
+tri_result <- igraph::triad_census(enron_tidy)
+tri_result
 ```
 
