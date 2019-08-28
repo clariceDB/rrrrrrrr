@@ -1844,8 +1844,49 @@ E(enron)
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZW5yb24gJT4lIFxuICBhc190YmxfZ3JhcGgoKSAlPiUgXG4gIHRyaWFkX2NlbnN1cygpXG5gYGAifQ== -->
+<pre class="r"><code>enron %&gt;% 
+  as_tbl_graph() %&gt;% 
+  triad_census()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSA0MDUyODMgIDc2NDAzICAgICAgMCAgIDE2NjggICAxMzY4ICAgMTczMyAgICAgIDAgICAgICAwICAgIDg4OSAgICAgIDAgICAgICAwICAgICAgMCAgICAgIDAgICAgICAwICAgICAgMCAgICAgIDBcbiJ9 -->
+<pre><code> [1] 405283  76403      0   1668   1368   1733      0      0    889      0      0      0      0      0      0      0</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGVzdCA8LWVucm9uICU+JVxuICBhc190YmxfZ3JhcGgoKSAlPiVcbiAgbXV0YXRlKHRyaWFkc19nID0gbGlzdCh0cmlhZF9jZW5zdXMoLkcoKSkpKSBcblxudHJpYWRfbmFtZXM8LSBjKFwiMDAzIFwiLFwiMDEyIFwiLFwiMTAyIFwiLFwiMDIxRFwiLFwiMDIxVVwiLFwiMDIxQ1wiLFwiMTExRFwiLFwiMTExVVwiLFwiMDMwVFwiLFwiMDMwQ1wiLFwiMjAxIFwiLFwiMTIwRFwiLFwiMTIwVVwiLFwiMTIwQ1wiLFwiMjEwIFwiLFwiMzAwIFwiKVxuXG5hc19kYXRhX2ZyYW1lKCkgJT4lIFxuICBzZWxlY3QobmFtZSx0cmlhZHNfZykgJT4lIFxuICB1bm5lc3QoKSAlPiUgXG4gIG11dGF0ZSh0cmlhZCA9IHJlcCh0cmlhZF9uYW1lcywxNDQpKSAlPiUgXG4gIGRpc3RpbmN0KHRyaWFkc19nLHRyaWFkKVxuYGBgIn0= -->
+<pre class="r"><code>test &lt;-enron %&gt;%
+  as_tbl_graph() %&gt;%
+  mutate(triads_g = list(triad_census(.G()))) 
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gCgpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ21kK1NoaWZ0K0VudGVyKi4gCmBgYHtyIExvYWR9CnBhY21hbjo6cF9sb2FkKHJhbmRvbU5hbWVzLCB0aWR5Z3JhcGgsIHRpZHl2ZXJzZSwgaWdyYXBoLCBnZ3JhcGgpCnNldHdkKGdldHdkKCkpCmBgYAoKYGBge3IgUmVhZCBpbn0KZW5yb24gPC0gcmVhZF9kZWxpbSgiZGF0YXJhdy9lbWFpbC1lbnJvbi1vbmx5Lm10eCIsZGVsaW0gPSAiICIsY29sX25hbWVzID0gRikgJT4lIAogIHJlbmFtZSgiZnJvbSIgPSBYMSwKICAgICAgICAgInRvIiA9IFgyKSAlPiUgCiAgZ3JhcGhfZnJvbV9kYXRhX2ZyYW1lKCkKClYoZW5yb24pJG5hbWUgPC0gcmFuZG9tTmFtZXMoMTQ0LCB3aGljaC5uYW1lcz0iZmlyc3QiKQpgYGAKYGBge3J9CnR5cGVvZihlbnJvbikKRShlbnJvbikKICBOVUxMCmBgYAoKYGBge3J9CmVucm9uX3RpZHkgPC0gYXNfdGJsX2dyYXBoKGVucm9uKQpgYGAKCgpgYGB7cn0KZW5yb25fdGlkeSAlPiUgCiAgZ2dyYXBoKCkrCiAgZ2VvbV9ub2RlX3BvaW50KCkgKyAKICBnZW9tX25vZGVfdGV4dChhZXMobGFiZWwgPSBWKGVucm9uX3RpZHkpJG5hbWUpLCByZXBlbCA9IEYpICsKICBnZW9tX2VkZ2VfZGlhZ29uYWwoKSsKICB0aGVtZV9ncmFwaCgpCmBgYAoKClRyaWFkIENlbnVzIGlzIG5vdCBhIG1lYXN1cmVtZW50IGF2YWlsYWJsZSBpbiBUaWR5Z3JhcGguIEJld2FyZSB0aGUgcmV0dXJuISAoMTYgdmVjdG9ycykKYGBge3IgVHJpYWR9CnRyaV9yZXN1bHQgPC0gaWdyYXBoOjp0cmlhZF9jZW5zdXMoZW5yb25fdGlkeSkKdHJpX3Jlc3VsdApgYGAKCg==</div>
+triad_names&lt;- c(&quot;003 &quot;,&quot;012 &quot;,&quot;102 &quot;,&quot;021D&quot;,&quot;021U&quot;,&quot;021C&quot;,&quot;111D&quot;,&quot;111U&quot;,&quot;030T&quot;,&quot;030C&quot;,&quot;201 &quot;,&quot;120D&quot;,&quot;120U&quot;,&quot;120C&quot;,&quot;210 &quot;,&quot;300 &quot;)
+
+as_data_frame() %&gt;% 
+  select(name,triads_g) %&gt;% 
+  unnest() %&gt;% 
+  mutate(triad = rep(triad_names,144)) %&gt;% 
+  distinct(triads_g,triad)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gaXNfaWdyYXBoKHgpIDogYXJndW1lbnQgXCJ4XCIgaXMgbWlzc2luZywgd2l0aCBubyBkZWZhdWx0XG4ifQ== -->
+<pre><code>Error in is_igraph(x) : argument &quot;x&quot; is missing, with no default</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGVzdCA8LWVucm9uICU+JVxuICBhc190YmxfZ3JhcGgoKSAlPiVcbiAgbXV0YXRlKHRyaWFkc19nID0gbGlzdCh0cmlhZF9jZW5zdXMoLkcoKSkpKSBcbmBgYCJ9 -->
+<pre class="r"><code>test &lt;-enron %&gt;%
+  as_tbl_graph() %&gt;%
+  mutate(triads_g = list(triad_census(.G()))) </code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gCgpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ21kK1NoaWZ0K0VudGVyKi4gCmBgYHtyIExvYWR9CnBhY21hbjo6cF9sb2FkKHJhbmRvbU5hbWVzLCB0aWR5Z3JhcGgsIHRpZHl2ZXJzZSwgaWdyYXBoLCBnZ3JhcGgpCnNldHdkKGdldHdkKCkpCmBgYAoKYGBge3IgUmVhZCBpbn0KZW5yb24gPC0gcmVhZF9kZWxpbSgiZGF0YXJhdy9lbWFpbC1lbnJvbi1vbmx5Lm10eCIsZGVsaW0gPSAiICIsY29sX25hbWVzID0gRikgJT4lIAogIHJlbmFtZSgiZnJvbSIgPSBYMSwKICAgICAgICAgInRvIiA9IFgyKSAlPiUgCiAgZ3JhcGhfZnJvbV9kYXRhX2ZyYW1lKCkKClYoZW5yb24pJG5hbWUgPC0gcmFuZG9tTmFtZXMoMTQ0LCB3aGljaC5uYW1lcz0iZmlyc3QiKQpgYGAKYGBge3J9CnR5cGVvZihlbnJvbikKRShlbnJvbikKICBOVUxMCmBgYAoKYGBge3J9CmVucm9uX3RpZHkgPC0gYXNfdGJsX2dyYXBoKGVucm9uKQpgYGAKCgpgYGB7cn0KZW5yb25fdGlkeSAlPiUgCiAgZ2dyYXBoKCkrCiAgZ2VvbV9ub2RlX3BvaW50KCkgKyAKICBnZW9tX25vZGVfdGV4dChhZXMobGFiZWwgPSBWKGVucm9uX3RpZHkpJG5hbWUpLCByZXBlbCA9IEYpICsKICBnZW9tX2VkZ2VfZGlhZ29uYWwoKSsKICB0aGVtZV9ncmFwaCgpCmBgYAoKClRyaWFkIENlbnVzIGlzIG5vdCBhIG1lYXN1cmVtZW50IGF2YWlsYWJsZSBpbiBUaWR5Z3JhcGguIEJld2FyZSB0aGUgcmV0dXJuISAoMTYgdmVjdG9ycykKYGBge3IgVHJpYWR9CnRyaV9yZXN1bHQgPC0gaWdyYXBoOjp0cmlhZF9jZW5zdXMoZW5yb25fdGlkeSkKdHJpX3Jlc3VsdApgYGAKCmBgYHtyfQplbnJvbiAlPiUgCiAgYXNfdGJsX2dyYXBoKCkgJT4lIAogIHRyaWFkX2NlbnN1cygpCgpgYGAKCgpgYGB7cn0KdGVzdCA8LWVucm9uICU+JQogIGFzX3RibF9ncmFwaCgpICU+JQogIG11dGF0ZSh0cmlhZHNfZyA9IGxpc3QodHJpYWRfY2Vuc3VzKC5HKCkpKSkgCgp0cmlhZF9uYW1lczwtIGMoIjAwMyAiLCIwMTIgIiwiMTAyICIsIjAyMUQiLCIwMjFVIiwiMDIxQyIsIjExMUQiLCIxMTFVIiwiMDMwVCIsIjAzMEMiLCIyMDEgIiwiMTIwRCIsIjEyMFUiLCIxMjBDIiwiMjEwICIsIjMwMCAiKQoKYXNfZGF0YV9mcmFtZSgpICU+JSAKICBzZWxlY3QobmFtZSx0cmlhZHNfZykgJT4lIAogIHVubmVzdCgpICU+JSAKICBtdXRhdGUodHJpYWQgPSByZXAodHJpYWRfbmFtZXMsMTQ0KSkgJT4lIAogIGRpc3RpbmN0KHRyaWFkc19nLHRyaWFkKQpgYGAKCmBgYHtyfQp0ZXN0IDwtZW5yb24gJT4lCiAgYXNfdGJsX2dyYXBoKCkgJT4lCiAgbXV0YXRlKHRyaWFkc19nID0gbGlzdCh0cmlhZF9jZW5zdXMoLkcoKSkpKSAKYGBgCgo=</div>
 
 
 

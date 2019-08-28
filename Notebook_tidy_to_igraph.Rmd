@@ -46,3 +46,31 @@ tri_result <- igraph::triad_census(enron_tidy)
 tri_result
 ```
 
+```{r}
+enron %>% 
+  as_tbl_graph() %>% 
+  triad_census()
+
+```
+
+
+```{r}
+test <-enron %>%
+  as_tbl_graph() %>%
+  mutate(triads_g = list(triad_census(.G()))) 
+
+triad_names<- c("003 ","012 ","102 ","021D","021U","021C","111D","111U","030T","030C","201 ","120D","120U","120C","210 ","300 ")
+
+as_data_frame() %>% 
+  select(name,triads_g) %>% 
+  unnest() %>% 
+  mutate(triad = rep(triad_names,144)) %>% 
+  distinct(triads_g,triad)
+```
+
+```{r}
+test <-enron %>%
+  as_tbl_graph() %>%
+  mutate(triads_g = list(triad_census(.G()))) 
+```
+
