@@ -92,6 +92,12 @@ enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>
 V(enron)$name <- some_names
 ```
 
+The class of enron is a `tbl graph` which is a sub-class of `igraph`. This is why the result of a conversion from an `igraph` to a `tbl graph` is both "igraph and tbl_graph".
+```{r}
+enron %>% as_tbl_graph() %>% class()
+```
+
+
 ```{r eval=FALSE, include=FALSE}
 rm(list=ls())
 ```
