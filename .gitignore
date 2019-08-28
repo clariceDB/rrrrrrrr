@@ -107,5 +107,8 @@ vignettes/*.pdf
 *.utf8.md
 *.knit.md
 
+#HTML
+*.html
+
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
