@@ -1,0 +1,54 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+#Loading all the necessary packages
+pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph)
+```
+
+```{r}
+enron <- read_delim("email-enron-only.mtx",delim = " ",col_names = F) %>% 
+  rename("from" = X1,
+         "to" = X2) %>% 
+  graph_from_data_frame()
+V(enron)$name <- randomNames(144, which.names="first")
+```
+```{r}
+#Testing Transitivity with global and local
+#Difference between two functions is that local is
+
+#global transitivity
+transitivity(enron)
+
+#local transitivity
+transitivity(enron, vids = "Kayla", type = "local")
+```
+```{r}
+class(enron)
+#Output shows that at the moment that enron is an igraph
+enron_tib <- as_tbl_graph(enron)
+#Attemoting to convert to a tibble graph to use in certain situations if need be
+class(enron_tib)
+#One can see by the second output that it didnt change from igraph to tbl_graph but now takes on both. 
+#This is because tbl_graph is a subset of igraph
+
+igraph::transitivity(enron_tib)
+tidygraph::transitivity(enron_tib)
+#Bottom two is a metric and an error message. This is because this function can only be run in igraph and not in tidygraph. It is rare but there may be cases where igraph can do things that tidygraph cannot. 
+```
+```{r}
+#If one then needs to convert to igraph to use it then use the following conversion code
+igraph_test <- as.igraph(enron_tib)
+class(igraph_test)
+
+#If one then needs to convert to tbl_graph to use it then use the following conversion code
+#You can not drop the igraph, but if your class was just igraph then run the above conversion code to use enron as a tbl_graph
+tbl_graph_test <- as_tbl_graph(enron_tib)
+class(tbl_graph_test)
+```
+
+
+
+

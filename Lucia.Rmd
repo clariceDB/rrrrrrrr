@@ -7,22 +7,88 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+----
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Before I start
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+#### Here is a copy and pasta of things that I've read that might be useful to put in our document:
+As the name suggests, tidygraph is an entry into the tidyverse that provides a tidy framework for all things relational (networks/graphs, trees, etc.).
 
-```{r cars}
-summary(cars)
+tidygraph lets you temporarily change the representation of your graph, do some manipulation of the node and edge data, and then change back to the original graph with the changes being merged in automatically. This is powered by the new morph()/unmorph() verbs hat lets you e.g. contract nodes, work on the linegraph representation, split communities to seperate graphs etc. If you wish to continue with the morphed version, the crystallise() verb lets you freeze the temporary representation into a proper tbl_graph.
+
+There are numerous network analysis packages in R. We’ll be using the packages igraph, perhaps the most relied upon social network package in R (that or the suite of statnet packages) and tidygraph and ggraph, which leverage the power of igraph in a manner consistent with the tidyverse workflow.
+
+----
+
+## Load Packages
+
+For Leiden
+```{r}
+if (!requireNamespace("devtools"))
+    install.packages("devtools")
+
+devtools::install_github("TomKellyGenetics/leiden")
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+For tidygraph, igraph, gggraph and randomizing names
+```{r}
+pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph,leiden)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+----
+
+## Load Graph
+This sell creates an enron igraph from the enron dataset.
+enron is of type igraph
+
+```{r Setup Enron Graph}
+enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
+        rename("from" = X1,
+               "to" = X2) %>% 
+      graph_from_data_frame()
+
+V(enron)$name <- randomNames(144, which.names="first")
+```
+
+----
+
+```{r}
+adjacency_matrix <- rbind(cbind(matrix(round(rbinom(4000, 1, 0.8)), 20, 20),
+                                matrix(round(rbinom(4000, 1, 0.3)), 20, 20), 
+                                matrix(round(rbinom(400, 1, 0.1)), 20, 20)),
+                          cbind(matrix(round(rbinom(400, 1, 0.3)), 20, 20), 
+                                matrix(round(rbinom(400, 1, 0.8)), 20, 20), 
+                                matrix(round(rbinom(4000, 1, 0.2)), 20, 20)),
+                          cbind(matrix(round(rbinom(400, 1, 0.3)), 20, 20), 
+                                matrix(round(rbinom(4000, 1, 0.1)), 20, 20), 
+                                matrix(round(rbinom(4000, 1, 0.9)), 20, 20)))
+```
+
+
+```{r}
+
+```
+
+
+
+
+
+
+----
+
+Code for converting tbl_graph into igraph
+```{r} 
+#Assortativity
+get_assort_global_comm <- function(x) {
+  temp_graph <- as.igraph(final_graph %>%
+                          filter(top_comm == x))
+  
+  return(assortativity.degree(temp_graph))
+}
+```
+
+
+```{r}
+
+```
+
