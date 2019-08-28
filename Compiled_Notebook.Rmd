@@ -220,14 +220,14 @@ plot(graph_object, vertex.color = node.cols)
 
 ### <b>3. Triad Census</b>
 
-We provide a third example of the missing functions in the tidygraph, where we are forced to convert the tbl_graph into an igraph. Once again, we need to import the correct packages.
+We provide a third example of the missing functions in the tidygraph package, where we are forced to convert the tbl_graph into an igraph. Once again, we need to import the correct packages.
 
 ```{r include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph)
 ```
 
-As previously mentioned, `triad_census` counts for each triple of vertices, the number of times each of the 16 possible states occur. The states are represented by codes. Some examples can be found below: 
+As previously mentioned, `triad_census` counts for each triple of vertices, the number of times each of the 16 possible states occur. The states are represented by codes. Three examples can be found below: 
 
 * 003  -  A,B,C, the empty graph.
 
@@ -240,19 +240,20 @@ Here is an array of the names of the states:
 triad_names<- c("003 ","012 ","102 ","021D","021U","021C","111D","111U","030T","030C","201 ","120D","120U","120C","210 ","300 ")
 ```
 
-Remember that you can call `help(triad_census)` if you want to see a full description of the codes for the states. Before we dive right in, lets take a look at a few smaller graphs.
+Remember that you can call `help(triad_census)` if you want to see a full description of the codes for the states. Before we dive right in, lets take a look at a few smaller graphs to help demonstrate the process.
 
 > <b>Smaller graphs</b>
-In order to explain the states, here is a selection of smaller graphs and the results of running `triad_census` on them. We first substantiate a graph and then run `triad_census` on it. 
+In order to explain the states, here is a selection of smaller graphs and the results of running `triad_census` on them. We first substantiate a graph (nodes A, B, and C) and then run `triad_census` on it. 
 
 ```{r}
-# Define a graph
+# Define a graph 
 one <- graph_from_literal(A-+B, C--B)
 
 data.frame(tri = triad_census(one), name = triad_names)
 ```
 
 ```{r}
+# Define a graph 
 two <- graph_from_literal(C-+B, B-+A, A-+C)
 
 data.frame(tri = triad_census(two), name = triad_names)
@@ -264,11 +265,16 @@ three <- graph_from_literal(A-+B, B-+A, A-+C)
 data.frame(tri = triad_census(three), name = triad_names)
 ```
 
+The outputs of these cells showcase the type/state of triad that exists in the graph. We see this by looking at the corresponding 1 value in the `tri` to the `name` column.
+
+After looking at simple examples of how `triad_census` works, let's have a look at the following example:
+
 Generate list of random names for enron dataset. 
 ```{r}
 some_names = randomNames(144, which.names="first")
 ```
 
+Just like the other sections, we initiate our `enron` dataset and create a graph from it. The vertices within the graph is named. 
 ```{r message=FALSE}
 enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
   rename("from" = X1,
@@ -280,12 +286,12 @@ enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>
 V(enron)$name <- some_names
 ```
 
-The class of enron is a `tbl graph` which is a sub-class of `igraph`. This is why the result of a conversion from an `igraph` to a `tbl graph` is both "igraph and tbl_graph".
+As previously mentioned, the class of enron is a `tbl graph` which is a sub-class of `igraph`. This is why the result of a conversion from an `igraph` to a `tbl graph` is both "igraph and tbl_graph". This can be cofirmed by running the following code:
 ```{r}
 enron %>% as_tbl_graph() %>% class()
 ```
 
-Calculate the number of triad types.
+Next, we can calculate the number of triad types. If the graph is not an igraph, we need to uncomment the second line and run the entire cell again. `as.igraph()` will convert the tidygraph into an igraph. 
 ```{r}
 triads <- enron %>% 
   #as.igraph() %>% #if the graph is not an igraph
@@ -293,7 +299,7 @@ triads <- enron %>%
 triads
 ```
 
-Create a new data frame to plot the results
+Thereafter, we can create a new data frame to plot the results as follows:
 ```{r warning=FALSE}
 data.frame(values = triads, names = triad_names) %>% 
   ggplot() +
@@ -304,7 +310,7 @@ data.frame(values = triads, names = triad_names) %>%
   ylab("Count")
 ```
 
-
+To finish things properly, we can clear or global variables.
 ```{r eval=FALSE, include=FALSE}
 rm(list=ls())
 ```
