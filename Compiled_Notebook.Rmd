@@ -170,7 +170,7 @@ devtools::install_github("TomKellyGenetics/leiden")
 ```
 
 We use pacman to load the following libraries:
-```{r}
+```{r message=FALSE, warning=FALSE}
 pacman::p_load(leiden, tidygraph, tidyverse, igraph, ggraph, randomNames, RColorBrewer, reticulate, leidenalg)
 ```
 
