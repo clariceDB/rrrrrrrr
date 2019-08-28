@@ -9,6 +9,7 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 ```{r Load}
 pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph, ggplot)
 setwd(getwd())
+options(scipen = 999)
 ```
 
 ```{r Read in}
@@ -82,7 +83,13 @@ new_df <- data.frame(values = one[[1]], names = triad_names)
 ```
 
 ```{r}
-new_df %>% 
- ggplot()
+
+ ggplot(new_df) +
+  geom_bar(aes(x=names, y=values), stat="identity") +
+  scale_y_log10() +
+  ggtitle("Triad Census") +
+  xlab("Triad type") +
+  ylab("Count")
+  
 ```
 
