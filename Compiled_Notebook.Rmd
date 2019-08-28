@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## <b>What is this all about?</b>
-This Notebook demonstrates the complications that are encountered when trying to manipulate tinygraphs. As the name suggests, tidygraph is an entry into the tidyverse package that provides a tidy framework for all things relational (networks/graphs, trees, etc.). Tidygraph is a 'wrapper' for iGraph, which essentially means that all the functions that can be performed on tidygraphs can be performed on iGraphs. The issue here is that there are some functions that are not supported in the tidygraph package but is available to use in the iGraph package. 
+This Notebook demonstrates the complications that are encountered when trying to manipulate tinygraphs. As the name suggests, tidygraph is an entry into the tidyverse package that provides a tidy framework for all things relational (networks/graphs, trees, etc.). Tidygraph (tbl_graph) is a 'wrapper' for iGraph, which essentially means that all the functions that can be performed on tidygraphs can be performed on iGraphs. The issue here is that there are some functions that are not supported in the tidygraph package but is available to use in the iGraph package. 
 
 If you are working with a tidygraph and you are forced to make use of an iGraph function, you will need to convert the tidygraph into an igraph, compute the function, and then convert it back to a tidygraph. So essentially, tidygraph lets you temporarily change the representation of your graph, do some manipulation of the node and edge data, and then change back to the original graph with the changes being merged in automatically.
 
@@ -90,7 +90,7 @@ help(triad_census)
 
 Now that we've covered the theoretical aspects of the functions, let's investigate the above-mentioned functions in finer detail. 
 
-### <b>Transitivity</b>
+### <b>1. Transitivity</b>
 
 Let's load the required packages: 
 ```{r Load packages}
@@ -101,7 +101,7 @@ For demonstration purposes, we'll be using the enron dataset. The `email-enron-o
 
 ```{r Dataset, message=FALSE, warning=FALSE}
 # Load the enron dataset
-enron <- read_delim("email-enron-only.mtx",delim = " ",col_names = F) %>% 
+enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
   rename("from" = X1,
          "to" = X2) %>% 
   graph_from_data_frame()
@@ -117,43 +117,110 @@ Before we move on, note that enron is of type `igraph`. To check this, you can r
 transitivity(enron)
 ```
 
-
 ```{r}
 # Local transitivity
-transitivity(enron, vids = "Kayla", type = "local")
+#transitivity(enron, vids = "Kayla", type = "local")
 ```
 
-
-Next, we 
-
-```{r}
-
-```
-
-
+Next, we take `enron` and convert it to a tbl_graph. We do this by executing the following:
 
 ```{r}
 enron_tib <- as_tbl_graph(enron)
-#Attempting to convert to a tibble graph to use in certain situations if need be
-
-class(enron_tib)
-#One can see by the second output that it didnt change from igraph to tbl_graph but now takes on both. 
-#This is because tbl_graph is a subset of igraph
-
-igraph::transitivity(enron_tib)
-tidygraph::transitivity(enron_tib)
-#Bottom two is a metric and an error message. This is because this function can only be run in igraph and not in tidygraph. It is rare but there may be cases where igraph can do things that tidygraph cannot. 
 ```
+
+You'll see after running the following cell that the class of `enron_tib` did not entirely change to `tbl_graph`:
+
 ```{r}
-#If one then needs to convert to igraph to use it then use the following conversion code
+class(enron_tib)
+```
+
+In fact, the class of `enron_tib` is both `tbl_graph` and `igraph`. This is because tbl_graph is a subset of igraph. If you look below, we run transitivity on `enron_tib` from the igraph and tidygraph package. You'll notice that there is an error message saying "'transitivity' is not an exported object from 'namespace:tidygraph'" when you namespace the tidygraph package. This is essentially what this tutorial is all about. We can't call a function in the tidygraph package because it does not exist in that package.
+
+
+```{r}
+igraph::transitivity(enron_tib)
+#tidygraph::transitivity(enron_tib)
+```
+
+Therefore, we need to convert `enron_tib` into an igraph - so that we can calculate the `transitivity`. We achieve this by executing the following code. Have a look at the output of the class:
+
+```{r}
 igraph_test <- as.igraph(enron_tib)
 class(igraph_test)
+```
 
-#If one then needs to convert to tbl_graph to use it then use the following conversion code
-#You can not drop the igraph, but if your class was just igraph then run the above conversion code to use enron as a tbl_graph
+We can now see that the tbl_graph has successfully been converted into an igraph. We can not convert it back into a tbl_graph. This is how you do it:
+
+```{r}
 tbl_graph_test <- as_tbl_graph(enron_tib)
 class(tbl_graph_test)
 ```
+
+We can confirm with certainty that one cannot convert the graph into an exlusively tbl_graph, so you'll always get `"tbl_graph" "igraph"` as the class when you convert it into a tbl_graph. However, if your class was just igraph then run the above conversion code to use enron as a tbl_graph.
+
+### <b>2. Leiden</b>
+
+Let's look at the second example:`leiden`. Once again, we need to install the appropriate packages. 
+
+```{r message=FALSE}
+if (!requireNamespace("devtools"))
+    install.packages("devtools")
+
+devtools::install_github("TomKellyGenetics/leiden")
+```
+
+We use pacman to load the following libraries:
+```{r}
+pacman::p_load(leiden, tidygraph, tidyverse, igraph, ggraph, randomNames, RColorBrewer, reticulate, leidenalg)
+```
+
+Let's read in the `enron` dataset again and build our graph. Note that, once again, the class of `enron` is an igraph.
+```{r message=FALSE, warning=FALSE}
+enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
+  rename("from" = X1,
+         "to" = X2) %>% 
+  graph_from_data_frame()
+```
+
+It is not essential to understand the algorithm in full detail. Rather, spend time understanding the steps to convert the tbl_graph into igraph and vise-versa.
+
+Here we convert the graph into a `tbl_graph` as follows:
+```{r}
+enron_tidy <- as_tbl_graph(enron)
+```
+
+
+Next, we convert `enron_tidy` to an adjacency matrix, since the leiden algorithm requires an adjacency matrix as a paramater. From there we create a graph project that can be plotted.
+```{r}
+A <- as_adjacency_matrix(enron_tidy,type="both",names=TRUE,sparse=FALSE)
+
+graph_object <- graph_from_adjacency_matrix(A, mode = "directed")
+
+plot(graph_object, vertex.color = "grey75")
+```
+
+
+This can be a shared nearest neighbours matrix derived from a graph object. Once again, we namespace the `as_adjacency_matrix` with both the igraph and tidygraph package. We encounter the same error as in the previous example. `as_adjacency_matrix` is not supported by the tidygraph package and outputs the following error: 'as_adjacency_matrix' is not an exported object from 'namespace:tidygraph'. Uncomment and run the second line to see the error.
+```{r}
+adjacency_matrix <- igraph::as_adjacency_matrix(graph_object)
+#adjacency_matrix <- tidygraph::as_adjacency_matrix(graph_object)
+```
+
+Once we have successfully been able to convert the tbl_graph into an igraph and then finally into an agency matrix, we can run the following `leiden` function:
+```{r}
+#partition <- leiden(adjacency_matrix)
+#table(partition)
+```
+
+For interest sake: This shows partitions in the plotted results. The nodes that are more interconnected have been partitioned into separate clusters.
+```{r}
+node.cols <- brewer.pal(max(c(3, partition)),"Pastel1")[partition]
+plot(graph_object, vertex.color = node.cols)
+```
+
+### <b>3. Transitivity</b>
+
+
 
 ----
 
