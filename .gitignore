@@ -90,7 +90,7 @@ vignettes/*.pdf
 /*.Rcheck/
 
 # RStudio files
-.Rproj
+*/.Rproj
 
 # produced vignettes
 vignettes/*.html
@@ -106,6 +106,9 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+
+#HTML
+*.html
 
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
