@@ -315,6 +315,8 @@ To finish things properly, we can clear or global variables.
 rm(list=ls())
 ```
 
+
+End of Tutorial
 ----
 
 
