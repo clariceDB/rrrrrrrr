@@ -22,9 +22,13 @@ V(enron)$name <- randomNames(144, which.names="first")
 #global transitivity
 transitivity(enron)
 
+enron[[1,1]]
+
 #local transitivity
 transitivity(enron, vids = "Kayla", type = "local")
 ```
+
+
 ```{r}
 class(enron)
 #Output shows that at the moment that enron is an igraph
