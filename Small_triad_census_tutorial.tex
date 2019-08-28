@@ -1,0 +1,385 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={R Notebook},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{R Notebook}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pacman}\OperatorTok{::}\KeywordTok{p_load}\NormalTok{(randomNames, tidygraph, tidyverse, igraph, ggraph, ggplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'ggplot' is not available (for R version 3.5.1)
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in p_install(package, character.only = TRUE, ...):
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'ggplot'
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph, : Failed to install/load:
+## ggplot
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{triad_names<-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"003 "}\NormalTok{,}\StringTok{"012 "}\NormalTok{,}\StringTok{"102 "}\NormalTok{,}\StringTok{"021D"}\NormalTok{,}\StringTok{"021U"}\NormalTok{,}\StringTok{"021C"}\NormalTok{,}\StringTok{"111D"}\NormalTok{,}\StringTok{"111U"}\NormalTok{,}\StringTok{"030T"}\NormalTok{,}\StringTok{"030C"}\NormalTok{,}\StringTok{"201 "}\NormalTok{,}\StringTok{"120D"}\NormalTok{,}\StringTok{"120U"}\NormalTok{,}\StringTok{"120C"}\NormalTok{,}\StringTok{"210 "}\NormalTok{,}\StringTok{"300 "}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\#\#Using Triad Census
+
+This function counts for each triple of vertices, the number of times
+each of the 16 possible states occur.
+
+\begin{itemize}
+\tightlist
+\item
+  003
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A,B,C, the empty graph.
+  \end{itemize}
+\item
+  012
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A-\textgreater{}B, C, the graph with a single directed edge.
+  \end{itemize}
+\item
+  102
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A\textless{}-\textgreater{}B, C, the graph with a mutual connection
+    between two vertices.
+  \end{itemize}
+\item
+  021D
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A\textless{}-B-\textgreater{}C, the out-star.
+  \end{itemize}
+\item
+  021U
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A-\textgreater{}B\textless{}-C, the in-star.
+  \end{itemize}
+\item
+  021C
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A-\textgreater{}B-\textgreater{}C, directed line.
+  \end{itemize}
+\item
+  111D
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A\textless{}-\textgreater{}B\textless{}-C.
+  \end{itemize}
+\item
+  111U
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A\textless{}-\textgreater{}B-\textgreater{}C.
+  \end{itemize}
+\item
+  030T
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A-\textgreater{}B\textless{}-C, A-\textgreater{}C.
+  \end{itemize}
+\item
+  030C
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A\textless{}-B\textless{}-C, A-\textgreater{}C.
+  \end{itemize}
+\item
+  201
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A\textless{}-\textgreater{}B\textless{}-\textgreater{}C.
+  \end{itemize}
+\item
+  120D
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A\textless{}-B-\textgreater{}C, A\textless{}-\textgreater{}C.
+  \end{itemize}
+\item
+  120U
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A-\textgreater{}B\textless{}-C, A\textless{}-\textgreater{}C.
+  \end{itemize}
+\item
+  120C
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A-\textgreater{}B-\textgreater{}C, A\textless{}-\textgreater{}C.
+  \end{itemize}
+\item
+  210
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A-\textgreater{}B\textless{}-\textgreater{}C,
+    A\textless{}-\textgreater{}C.
+  \end{itemize}
+\item
+  300
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A\textless{}-\textgreater{}B\textless{}-\textgreater{}C,
+    A\textless{}-\textgreater{}C, the complete graph.
+  \end{itemize}
+\end{itemize}
+
+\#\#\#Smaller graphs
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{one <-}\StringTok{ }\KeywordTok{graph_from_literal}\NormalTok{(A}\OperatorTok{-+}\NormalTok{B, C}\OperatorTok{--}\NormalTok{B)}
+
+\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{tri =} \KeywordTok{triad_census}\NormalTok{(one), }\DataTypeTok{name =}\NormalTok{ triad_names)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    tri name
+## 1    0 003 
+## 2    1 012 
+## 3    0 102 
+## 4    0 021D
+## 5    0 021U
+## 6    0 021C
+## 7    0 111D
+## 8    0 111U
+## 9    0 030T
+## 10   0 030C
+## 11   0 201 
+## 12   0 120D
+## 13   0 120U
+## 14   0 120C
+## 15   0 210 
+## 16   0 300
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{two <-}\StringTok{ }\KeywordTok{graph_from_literal}\NormalTok{(C}\OperatorTok{-+}\NormalTok{B, B}\OperatorTok{-+}\NormalTok{A, A}\OperatorTok{-+}\NormalTok{C)}
+
+\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{tri =} \KeywordTok{triad_census}\NormalTok{(two), }\DataTypeTok{name =}\NormalTok{ triad_names)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    tri name
+## 1    0 003 
+## 2    0 012 
+## 3    0 102 
+## 4    0 021D
+## 5    0 021U
+## 6    0 021C
+## 7    0 111D
+## 8    0 111U
+## 9    0 030T
+## 10   1 030C
+## 11   0 201 
+## 12   0 120D
+## 13   0 120U
+## 14   0 120C
+## 15   0 210 
+## 16   0 300
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{three <-}\StringTok{ }\KeywordTok{graph_from_literal}\NormalTok{(A}\OperatorTok{-+}\NormalTok{B, B}\OperatorTok{-+}\NormalTok{A, A}\OperatorTok{-+}\NormalTok{C)}
+
+\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{tri =} \KeywordTok{triad_census}\NormalTok{(three), }\DataTypeTok{name =}\NormalTok{ triad_names)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    tri name
+## 1    0 003 
+## 2    0 012 
+## 3    0 102 
+## 4    0 021D
+## 5    0 021U
+## 6    0 021C
+## 7    0 111D
+## 8    1 111U
+## 9    0 030T
+## 10   0 030C
+## 11   0 201 
+## 12   0 120D
+## 13   0 120U
+## 14   0 120C
+## 15   0 210 
+## 16   0 300
+\end{verbatim}
+
+
+\end{document}
