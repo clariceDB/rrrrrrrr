@@ -81,7 +81,7 @@ Generate list of random names for enron dataset.
 some_names = randomNames(144, which.names="first")
 ```
 
-```{r}
+```{r message=FALSE}
 enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
   rename("from" = X1,
          "to" = X2) %>% 
@@ -95,6 +95,25 @@ V(enron)$name <- some_names
 The class of enron is a `tbl graph` which is a sub-class of `igraph`. This is why the result of a conversion from an `igraph` to a `tbl graph` is both "igraph and tbl_graph".
 ```{r}
 enron %>% as_tbl_graph() %>% class()
+```
+
+Calculate the number of triad types.
+```{r}
+triads <- enron %>% 
+  #as.igraph() %>% #if the graph is not an igraph
+  triad_census()
+triads
+```
+
+Create a new data frame to plot the results
+```{r warning=FALSE}
+data.frame(values = triads, names = triad_names) %>% 
+  ggplot() +
+  geom_bar(aes(x=names, y=values), stat="identity") +
+  scale_y_log10() +
+  ggtitle("Triad Census") +
+  xlab("Triad type") +
+  ylab("Count")
 ```
 
 
