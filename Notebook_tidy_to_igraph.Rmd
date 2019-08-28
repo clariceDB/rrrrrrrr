@@ -7,19 +7,21 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 ```{r Load}
-pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph)
+pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph, ggplot)
 setwd(getwd())
 ```
 
 ```{r Read in}
+some_names = randomNames(144, which.names="first")
+
 enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
   rename("from" = X1,
          "to" = X2) %>% 
-  mutate(triads_g = "test") %>% 
-  mutate(name = "names") %>%
+  mutate(triads_g = "default") %>% 
+  mutate(name = "default") %>%
   graph_from_data_frame()
 
-V(enron)$name <- randomNames(144, which.names="first")
+V(enron)$name <- some_names
 ```
 ```{r}
 typeof(enron)
@@ -36,7 +38,7 @@ enron_tidy <- as_tbl_graph(enron)
 enron_tidy %>% 
   ggraph()+
   geom_node_point() + 
-  geom_node_text(aes(label = V(enron_tidy)$name), repel = F) +
+  geom_node_text(aes(label = V(enron)$name), repel = F) +
   geom_edge_diagonal()+
   theme_graph()
 ```
@@ -49,6 +51,7 @@ tri_result
 ```
 
 ```{r}
+enron %>% as_tbl_graph() %>% class()
 enron %>% 
   as_tbl_graph() %>% 
   triad_census()
@@ -61,22 +64,25 @@ new_df <- enron %>%
   as_tbl_graph() %>%
   mutate(triads_g = list(triad_census(.G()))) 
 
-new_df %>% select(triads_g)
-
 one <- V(new_df)$triads_g
-V(new_df)$name
+```
 
-summary(new_df ~ triad_census())
+```{r}
+enron %>% 
+as_data_frame() %>% 
+  select(triads_g,name) %>% 
+  unnest() %>% 
+  mutate(triad = rep(triad_names, 39)) %>% 
+  distinct(triads_g,triad)
+```
+
+```{r}
+one[[1]]
+new_df <- data.frame(values = one[[1]], names = triad_names)
 ```
 
 ```{r}
 new_df %>% 
-as_data_frame() %>% 
-  select(name,triads_g) %>% 
-  unnest() %>% 
-  mutate(triad = rep(triad_names, 39)) %>% 
-  distinct(triads_g,triad)
-
+ ggplot()
 ```
-
 
