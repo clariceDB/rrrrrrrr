@@ -9,6 +9,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This notebook is for putting everything together.
 
+
+1. Demonstrate Error
+```{r}
+
+```
+
+
+
+2. Demostrate Conversion 
 ```{r}
 
 ```
