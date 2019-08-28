@@ -1,0 +1,98 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph)
+setwd(getwd())
+```
+
+
+## Using Triad Census
+
+This function counts for each triple of vertices, the number of times each of the 16 possible states occur. 
+
+* 003  -  A,B,C, the empty graph.
+
+* 012  -  A->B, C, the graph with a single directed edge.
+
+* 102  -  A<->B, C, the graph with a mutual connection between two vertices.
+
+* 021D  -  A<-B->C, the out-star.
+
+* 021U  -  A->B<-C, the in-star.
+
+* 021C  -  A->B->C, directed line.
+
+* 111D  -  A<->B<-C.
+
+* 111U  -  A<->B->C.
+
+* 030T  -  A->B<-C, A->C.
+
+* 030C  -  A<-B<-C, A->C.
+
+* 201  -  A<->B<->C.
+
+* 120D  -  A<-B->C, A<->C.
+
+* 120U  -  A->B<-C, A<->C.
+
+* 120C  -  A->B->C, A<->C.
+
+* 210  -  A->B<->C, A<->C.
+
+* 300  -  A<->B<->C, A<->C, the complete graph.
+
+Here is an array of the names of the types 
+```{r}
+triad_names<- c("003 ","012 ","102 ","021D","021U","021C","111D","111U","030T","030C","201 ","120D","120U","120C","210 ","300 ")
+```
+
+
+### Smaller graphs
+In order to explain the types, here is a selection of smaller graphs and the results of running `triad_census` on them.
+```{r}
+one <- graph_from_literal(A-+B, C--B)
+
+data.frame(tri = triad_census(one), name = triad_names)
+```
+
+```{r}
+two <- graph_from_literal(C-+B, B-+A, A-+C)
+
+data.frame(tri = triad_census(two), name = triad_names)
+```
+
+```{r}
+three <- graph_from_literal(A-+B, B-+A, A-+C)
+
+data.frame(tri = triad_census(three), name = triad_names)
+```
+
+Generate list of random names for enron dataset. 
+```{r}
+some_names = randomNames(144, which.names="first")
+```
+
+```{r}
+enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
+  rename("from" = X1,
+         "to" = X2) %>% 
+  mutate(triads_g = "default") %>% 
+  mutate(name = "default") %>%
+  graph_from_data_frame()
+
+V(enron)$name <- some_names
+```
+
+```{r eval=FALSE, include=FALSE}
+rm(list=ls())
+```
+
