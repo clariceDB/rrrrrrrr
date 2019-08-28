@@ -16,6 +16,7 @@ enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>
   rename("from" = X1,
          "to" = X2) %>% 
   mutate(triads_g = "test") %>% 
+  mutate(name = "names") %>%
   graph_from_data_frame()
 
 V(enron)$name <- randomNames(144, which.names="first")
@@ -65,11 +66,15 @@ new_df %>% select(triads_g)
 one <- V(new_df)$triads_g
 V(new_df)$name
 
+summary(new_df ~ triad_census())
+```
+
+```{r}
 new_df %>% 
 as_data_frame() %>% 
   select(name,triads_g) %>% 
   unnest() %>% 
-  mutate(triad = rep(triad_names, 144)) %>% 
+  mutate(triad = rep(triad_names, 39)) %>% 
   distinct(triads_g,triad)
 
 ```
