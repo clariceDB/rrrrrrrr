@@ -218,7 +218,13 @@ node.cols <- brewer.pal(max(c(3, partition)),"Pastel1")[partition]
 plot(graph_object, vertex.color = node.cols)
 ```
 
-### <b>3. Transitivity</b>
+### <b>3. Triad Census</b>
+
+We provide a third example of missing functions in the tidygraph, where we are forced to convert the tbl_graph into an igraph.
+```{r}
+
+```
+
 
 
 
