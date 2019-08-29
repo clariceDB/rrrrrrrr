@@ -166,7 +166,7 @@ Let's look at the second example:`leiden`. Once again, we need to install the ap
 if (!requireNamespace("devtools"))
     install.packages("devtools")
 
-devtools::install_github("TomKellyGenetics/leiden")
+#devtools::install_github("TomKellyGenetics/leiden")
 ```
 
 We use pacman to load the following libraries:
@@ -229,11 +229,20 @@ pacman::p_load(randomNames, tidygraph, tidyverse, igraph, ggraph)
 
 As previously mentioned, `triad_census` counts for each triple of vertices, the number of times each of the 16 possible states occur. The states are represented by codes. Three examples can be found below: 
 
-* 003  -  A,B,C, the empty graph.
+#### 1. 003  -  A,B,C, the empty graph.
+```{r echo=FALSE, out.width="100"}
+knitr::include_graphics("triad_images/003.png")
+```
 
-* 012  -  A->B, C, the graph with a single directed edge.
+#### 2. 012  -  A->B, C, the graph with a single directed edge.
+```{r echo=FALSE, out.width="100"}
+knitr::include_graphics("triad_images/012.png")
+```
 
-* 102  -  A<->B, C, the graph with a mutual connection between two vertices.
+#### 3. 102  -  A<->B, C, the graph with a mutual connection between two vertices.
+```{r echo=FALSE, out.width="100"}
+knitr::include_graphics("triad_images/102.png")
+```
 
 Here is an array of the names of the states:
 ```{r}
@@ -242,8 +251,15 @@ triad_names<- c("003 ","012 ","102 ","021D","021U","021C","111D","111U","030T","
 
 Remember that you can call `help(triad_census)` if you want to see a full description of the codes for the states. Before we dive right in, lets take a look at a few smaller graphs to help demonstrate the process.
 
-> <b>Smaller graphs</b>
+----
+
+<b>Smaller graphs</b> <br>
 In order to explain the states, here is a selection of smaller graphs and the results of running `triad_census` on them. We first substantiate a graph (nodes A, B, and C) and then run `triad_census` on it. 
+
+#### 012: A->B, C, the graph with a single directed edge
+```{r echo=FALSE, out.width="100"}
+knitr::include_graphics("triad_images/012.png")
+```
 
 ```{r}
 # Define a graph 
@@ -252,11 +268,21 @@ one <- graph_from_literal(A-+B, C--B)
 data.frame(tri = triad_census(one), name = triad_names)
 ```
 
+#### 030c: A<-B<-C, A->C
+```{r echo=FALSE, out.width="100"}
+knitr::include_graphics("triad_images/030c.png")
+```
+
 ```{r}
 # Define a graph 
 two <- graph_from_literal(C-+B, B-+A, A-+C)
 
 data.frame(tri = triad_census(two), name = triad_names)
+```
+
+#### 111u: A<->B->C
+```{r echo=FALSE, out.width="100"}
+knitr::include_graphics("triad_images/111u.png")
 ```
 
 ```{r}
@@ -315,8 +341,7 @@ To finish things properly, we can clear or global variables.
 rm(list=ls())
 ```
 
-
-End of Tutorial
+##### End of Tutorial
 ----
 
 
