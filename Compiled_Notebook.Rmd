@@ -10,6 +10,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+setwd(getwd())
 ```
 
 ## <b>What is this all about?</b>
@@ -166,11 +167,13 @@ Let's look at the second example:`leiden`. Once again, we need to install the ap
 if (!requireNamespace("devtools"))
     install.packages("devtools")
 
-#devtools::install_github("TomKellyGenetics/leiden")
+devtools::install_github("TomKellyGenetics/leiden")
 ```
 
 We use pacman to load the following libraries:
 ```{r message=FALSE, warning=FALSE}
+py_install("python-igraph")
+py_install("leidenalg", forge = TRUE)
 pacman::p_load(leiden, tidygraph, tidyverse, igraph, ggraph, randomNames, RColorBrewer, reticulate, leidenalg)
 ```
 
@@ -196,7 +199,10 @@ A <- as_adjacency_matrix(enron_tidy,type="both",names=TRUE,sparse=FALSE)
 
 graph_object <- graph_from_adjacency_matrix(A, mode = "directed")
 
-plot(graph_object, vertex.color = "grey75")
+coords <- graph_object %>% 
+layout_on_grid(width = 12, height = 100, dim = 2)
+
+plot(graph_object, vertex.color = "grey75", layout=coords)
 ```
 
 
@@ -208,14 +214,14 @@ adjacency_matrix <- igraph::as_adjacency_matrix(graph_object)
 
 Once we have successfully been able to convert the tbl_graph into an igraph and then finally into an agency matrix, we can run the following `leiden` function:
 ```{r}
-#partition <- leiden(adjacency_matrix)
-#table(partition)
+partition <- leiden(adjacency_matrix)
+table(partition)
 ```
 
 For interest sake: This shows partitions in the plotted results. The nodes that are more interconnected have been partitioned into separate clusters.
 ```{r}
-#node.cols <- brewer.pal(max(c(3, partition)),"Pastel1")[partition]
-#plot(graph_object, vertex.color = node.cols)
+node.cols <- brewer.pal(max(c(3, partition)),"Pastel1")[partition]
+plot(graph_object, vertex.color = node.cols)
 ```
 
 ### <b>3. Triad Census</b>
