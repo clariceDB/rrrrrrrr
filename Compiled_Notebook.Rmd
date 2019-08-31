@@ -167,14 +167,19 @@ Let's look at the second example:`leiden`. Once again, we need to install the ap
 if (!requireNamespace("devtools"))
     install.packages("devtools")
 
-devtools::install_github("TomKellyGenetics/leiden")
+devtools::install_github("TomKellyGenetics/leiden", ref="master")
 ```
 
 We use pacman to load the following libraries:
 ```{r message=FALSE, warning=FALSE}
+pacman::p_load(leiden, tidygraph, tidyverse, igraph, ggraph, randomNames, RColorBrewer, reticulate, leidenalg)
+
+library("reticulate", "leidenalg")
+
+use_python("/usr/local/lib/python3") 
+
 py_install("python-igraph")
 py_install("leidenalg", forge = TRUE)
-pacman::p_load(leiden, tidygraph, tidyverse, igraph, ggraph, randomNames, RColorBrewer, reticulate, leidenalg)
 ```
 
 Let's read in the `enron` dataset again and build our graph. Note that, once again, the class of `enron` is an igraph.
@@ -193,7 +198,7 @@ enron_tidy <- as_tbl_graph(enron)
 ```
 
 
-Next, we convert `enron_tidy` to an adjacency matrix, since the leiden algorithm requires an adjacency matrix as a paramater. From there we create a graph project that can be plotted.
+Next, we convert `enron_tidy` to an adjacency matrix, since the leiden algorithm requires an adjacency matrix as a paramater. From there we create a graph project that can be plotted. A grid layout was chosen to show all the nodes.
 ```{r}
 A <- as_adjacency_matrix(enron_tidy,type="both",names=TRUE,sparse=FALSE)
 
@@ -214,7 +219,7 @@ adjacency_matrix <- igraph::as_adjacency_matrix(graph_object)
 
 Once we have successfully been able to convert the tbl_graph into an igraph and then finally into an agency matrix, we can run the following `leiden` function:
 ```{r}
-partition <- leiden(adjacency_matrix)
+partition <- leiden::leiden(adjacency_matrix)
 table(partition)
 ```
 
