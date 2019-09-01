@@ -19,10 +19,11 @@ This Notebook demonstrates the complications that are encountered when trying to
 
 If you are working with a tidygraph and you are forced to make use of an iGraph function, you will need to convert the tidygraph into an igraph, compute the function, and then convert it back to a tidygraph. So essentially, tidygraph lets you temporarily change the representation of your graph, do some manipulation of the node and edge data, and then change back to the original graph with the changes being merged in automatically.
 
-In order to understand this, we will demonstrate these conversions with the following functions:
-  * transitivity
-  * leiden
-  * triad_census
+In order to understand this, we will demonstrate these conversions with the following functions: <br>
+
+* transitivity
+* leiden
+* triad_census
   
 ----
 
@@ -108,7 +109,7 @@ enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>
          "to" = X2) %>% 
   graph_from_data_frame()
 
-# Add the employees names the vertices of the enron graph
+# Add the employees names to the vertices of the enron graph
 V(enron)$name <- randomNames(144, which.names="first")
 ```
 
@@ -119,12 +120,13 @@ Before we move on, note that enron is of type `igraph`. To check this, you can r
 transitivity(enron)
 ```
 
+We've commented out the calculation of local transitivity, because it will generate an error if `Kayla` does not exist within the graph. But this is an example of how you can calculate local transitivity of a specific node within a network.
 ```{r}
 # Local transitivity
 #transitivity(enron, vids = "Kayla", type = "local")
 ```
 
-Next, we take `enron` and convert it to a tbl_graph. We do this by executing the following:
+Let's move on and convert `enron` into a tbl_graph. We do this by executing the following:
 
 ```{r}
 enron_tib <- as_tbl_graph(enron)
@@ -136,15 +138,14 @@ You'll see after running the following cell that the class of `enron_tib` did no
 class(enron_tib)
 ```
 
-In fact, the class of `enron_tib` is both `tbl_graph` and `igraph`. This is because tbl_graph is a subset of igraph. If you look below, we run transitivity on `enron_tib` from the igraph and tidygraph package. You'll notice that there is an error message saying "'transitivity' is not an exported object from 'namespace:tidygraph'" when you namespace the tidygraph package. This is essentially what this tutorial is all about. We can't call a function in the tidygraph package because it does not exist in that package.
-
+In fact, the class of `enron_tib` is both `tbl_graph` and `igraph`. This is because tbl_graph is a subset of igraph. If you look below, we run transitivity on `enron_tib` from the igraph and tidygraph package. If you ran the commented code you'll notice that there is an error message saying "'transitivity' is not an exported object from 'namespace:tidygraph'". This is essentially what this tutorial is all about. We can't call a function in the tidygraph package because it does not exist in that package. The first line of code demonstrates that the function exists within the igraph package. 
 
 ```{r}
 igraph::transitivity(enron_tib)
 #tidygraph::transitivity(enron_tib)
 ```
 
-Therefore, we need to convert `enron_tib` into an igraph - so that we can calculate the `transitivity`. We achieve this by executing the following code. Have a look at the output of the class:
+Therefore, we need to convert `enron_tib` into an igraph - so that we can calculate its `transitivity`. We achieve this by executing the following code. Have a look at the output of the class:
 
 ```{r}
 igraph_test <- as.igraph(enron_tib)
@@ -349,7 +350,7 @@ To finish things properly, we can clear or global variables.
 rm(list=ls())
 ```
 
-##### End of Tutorial
+<b>End of Tutorial</b>
 ----
 
 
