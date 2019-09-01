@@ -15,7 +15,7 @@ options(scipen=999)
 ```
 
 ## <b>What is this all about?</b>
-This Notebook demonstrates the complications that are encountered when trying to manipulate tinygraphs. As the name suggests, tidygraph is an entry into the tidyverse package that provides a tidy framework for all things relational (networks/graphs, trees, etc.). Tidygraph (tbl_graph) is a 'wrapper' for iGraph, which essentially means that all the functions that can be performed on tidygraphs can be performed on iGraphs. The issue here is that there are some functions that are not supported in the tidygraph package but is available to use in the iGraph package. 
+This Notebook demonstrates the complications that are encountered when trying to manipulate tidygraphs. As the name suggests, tidygraph is an entry into the tidyverse package that provides a tidy framework for all things relational (networks/graphs, trees, etc.). Tidygraph (tbl_graph) is a 'wrapper' for iGraph, which essentially means that all the functions that can be performed on tidygraphs can be performed on iGraphs. The issue here is that there are some functions that are not supported in the tidygraph package but is available to use in the iGraph package. 
 
 If you are working with a tidygraph and you are forced to make use of an iGraph function, you will need to convert the tidygraph into an igraph, compute the function, and then convert it back to a tidygraph. So essentially, tidygraph lets you temporarily change the representation of your graph, do some manipulation of the node and edge data, and then change back to the original graph with the changes being merged in automatically.
 
