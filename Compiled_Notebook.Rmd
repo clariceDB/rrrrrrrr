@@ -11,6 +11,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 setwd(getwd())
+options(scipen=999)
 ```
 
 ## <b>What is this all about?</b>
@@ -172,11 +173,7 @@ devtools::install_github("TomKellyGenetics/leiden", ref="master")
 
 We use pacman to load the following libraries:
 ```{r message=FALSE, warning=FALSE}
-pacman::p_load(leiden, tidygraph, tidyverse, igraph, ggraph, randomNames, RColorBrewer, reticulate, leidenalg)
-
-library("reticulate", "leidenalg")
-
-use_python("/usr/local/lib/python3") 
+pacman::p_load(leiden, tidygraph, tidyverse, igraph, ggraph, randomNames, RColorBrewer, reticulate)
 
 py_install("python-igraph")
 py_install("leidenalg", forge = TRUE)
