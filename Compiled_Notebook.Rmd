@@ -11,6 +11,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 setwd(getwd())
+options(scipen=999)
 ```
 
 ## <b>What is this all about?</b>
