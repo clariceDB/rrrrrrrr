@@ -195,27 +195,29 @@ Here we convert the graph into a `tbl_graph` as follows:
 enron_tidy <- as_tbl_graph(enron)
 ```
 
-
 Next, we convert `enron_tidy` to an adjacency matrix, since the leiden algorithm requires an adjacency matrix as a paramater. From there we create a graph project that can be plotted. A grid layout was chosen to show all the nodes.
 ```{r}
+# Adjacency Matrix
 A <- as_adjacency_matrix(enron_tidy,type="both",names=TRUE,sparse=FALSE)
 
+# Create graph from adjacency matrix
 graph_object <- graph_from_adjacency_matrix(A, mode = "directed")
 
+# Get coordinates of nodes for grid layout
 coords <- graph_object %>% 
-layout_on_grid(width = 12, height = 100, dim = 2)
+  layout_on_grid(width = 12, height = 100, dim = 2)
 
+# Plot graph
 plot(graph_object, vertex.color = "grey75", layout=coords)
 ```
 
-
-This can be a shared nearest neighbours matrix derived from a graph object. Once again, we namespace the `as_adjacency_matrix` with both the igraph and tidygraph package. We encounter the same error as in the previous example. `as_adjacency_matrix` is not supported by the tidygraph package and outputs the following error: 'as_adjacency_matrix' is not an exported object from 'namespace:tidygraph'. Uncomment and run the second line to see the error.
+This can be a shared nearest neighbours matrix derived from a graph object. Once again, we namespace the `as_adjacency_matrix` with both the igraph and tidygraph package. We encounter the same error as in the previous example. `as_adjacency_matrix` is not supported by the tidygraph package and outputs the following error: `'as_adjacency_matrix' is not an exported object from 'namespace:tidygraph'`. Uncomment the code and run the second line to see the error.
 ```{r}
 adjacency_matrix <- igraph::as_adjacency_matrix(graph_object)
 #adjacency_matrix <- tidygraph::as_adjacency_matrix(graph_object)
 ```
 
-Once we have successfully been able to convert the tbl_graph into an igraph and then finally into an agency matrix, we can run the following `leiden` function:
+Once we have successfully been able to convert the tbl_graph into an igraph and then finally into an adjacency matrix, we can run the following `leiden` function:
 ```{r}
 partition <- leiden::leiden(adjacency_matrix)
 table(partition)
@@ -263,7 +265,7 @@ Remember that you can call `help(triad_census)` if you want to see a full descri
 ----
 
 <b>Smaller graphs</b> <br>
-In order to explain the states, here is a selection of smaller graphs and the results of running `triad_census` on them. We first substantiate a graph (nodes A, B, and C) and then run `triad_census` on it. 
+In order to explain the states, here is a selection of smaller graphs and the result of running `triad_census` on them. We first substantiate a graph (nodes A, B, and C) and then run `triad_census` on it. 
 
 #### 012: A->B, C, the graph with a single directed edge
 ```{r echo=FALSE, out.width="100"}
@@ -309,7 +311,7 @@ Generate list of random names for enron dataset.
 some_names = randomNames(144, which.names="first")
 ```
 
-Just like the other sections, we initiate our `enron` dataset and create a graph from it. The vertices within the graph is named. 
+Just like the other sections, we initiate our `enron` dataset and create a graph from it. The vertices within the graph are named. 
 ```{r message=FALSE}
 enron <- read_delim("dataraw/email-enron-only.mtx",delim = " ",col_names = F) %>% 
   rename("from" = X1,
@@ -323,7 +325,9 @@ V(enron)$name <- some_names
 
 As previously mentioned, the class of enron is a `tbl graph` which is a sub-class of `igraph`. This is why the result of a conversion from an `igraph` to a `tbl graph` is both "igraph and tbl_graph". This can be cofirmed by running the following code:
 ```{r}
-enron %>% as_tbl_graph() %>% class()
+enron %>% 
+  as_tbl_graph() %>% 
+  class()
 ```
 
 Next, we can calculate the number of triad types. If the graph is not an igraph, we need to uncomment the second line and run the entire cell again. `as.igraph()` will convert the tidygraph into an igraph. 
