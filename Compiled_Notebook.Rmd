@@ -18,7 +18,7 @@ This Notebook demonstrates the complications that are encountered when trying to
 
 If you are working with a tidygraph and you are forced to make use of an iGraph function, you will need to convert the tidygraph into an igraph, compute the function, and then convert it back to a tidygraph. So essentially, tidygraph lets you temporarily change the representation of your graph, do some manipulation of the node and edge data, and then change back to the original graph with the changes being merged in automatically.
 
-In order to understyand this, we will demonstrate these conversions with the following functions:
+In order to understand this, we will demonstrate these conversions with the following functions:
   * transitivity
   * leiden
   * triad_census
